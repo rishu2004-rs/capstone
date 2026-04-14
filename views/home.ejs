@@ -1,0 +1,95 @@
+<div class="space-y-32 pb-24 font-sans">
+    <!-- Hero Section -->
+    <section class="relative pt-20 pb-10 text-center">
+    <div class="max-w-5xl mx-auto space-y-10 animate-fade-in-up">
+        <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#f1f3f4] text-[#1a73e8] dark:bg-[#3c4043] dark:text-[#8ab4f8] font-medium text-sm tracking-wide">
+        <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1a73e8] opacity-60"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#1a73e8]"></span>
+        </span>
+        Real-time Case Tracking System
+        </div>
+        
+        <h1 class="text-6xl md:text-[5.5rem] font-medium tracking-tight text-[#202124] dark:text-[#e8eaed] leading-[1.05]">
+        Transparency in <br />
+        <span class="text-[#1a73e8] dark:text-[#8ab4f8]">Judicial Proceedings</span>
+        </h1>
+        
+        <p class="text-2xl text-[#5f6368] dark:text-[#9aa0a6] max-w-3xl mx-auto leading-relaxed font-light mt-6">
+        Search, track, and monitor court cases instantly. Whether you are a party to a case or an advocate, stay updated with real-time judicial records.
+        </p>
+
+        <form onsubmit="handleSearch(event)" class="max-w-3xl mx-auto relative group mt-14">
+        <div class="absolute inset-y-0 left-8 flex items-center text-[#5f6368] dark:text-[#9aa0a6]">
+            <i data-lucide="search" width="28" height="28" stroke-width="2"></i>
+        </div>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search Case Number (e.g., CN-2024-001)"
+            class="w-full pl-20 pr-48 py-7 rounded-full bg-white dark:bg-[#292a2d] border border-[#dadce0] dark:border-[#5f6368] focus:border-[#1a73e8] dark:focus:border-[#8ab4f8] outline-none shadow-sm transition-all text-xl font-medium text-[#202124] dark:text-[#e8eaed] placeholder-[#9aa0a6]"
+        />
+        <button 
+            type="submit"
+            class="absolute right-3 top-3 bottom-3 px-8 bg-[#1a73e8] text-white rounded-full font-medium text-lg hover:bg-[#1557b0] transition-colors flex items-center gap-2"
+        >
+            Search
+            <i data-lucide="arrow-right" width="22" height="22"></i>
+        </button>
+        </form>
+    </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
+        <div class="p-12 rounded-[2rem] bg-[#f1f3f4] dark:bg-[#292a2d] transition-all h-full flex flex-col items-center text-center hover:bg-[#e8eaed] dark:hover:bg-[#3c4043]">
+        <div class="w-20 h-20 rounded-full bg-white dark:bg-[#202124] flex items-center justify-center mb-8 shadow-sm">
+            <i data-lucide="clock" class="text-[#1a73e8] dark:text-[#8ab4f8]" width="36" height="36" stroke-width="1.5"></i>
+        </div>
+        <h3 class="text-2xl font-medium mb-4 text-[#202124] dark:text-[#e8eaed]">Live Status Updates</h3>
+        <p class="text-[#5f6368] dark:text-[#9aa0a6] text-lg leading-relaxed">
+            Stay informed with real-time updates on case proceedings and status changes.
+        </p>
+        </div>
+
+        <div class="p-12 rounded-[2rem] bg-[#f1f3f4] dark:bg-[#292a2d] transition-all h-full flex flex-col items-center text-center hover:bg-[#e8eaed] dark:hover:bg-[#3c4043]">
+        <div class="w-20 h-20 rounded-full bg-white dark:bg-[#202124] flex items-center justify-center mb-8 shadow-sm">
+            <i data-lucide="shield" class="text-[#188038] dark:text-[#81c995]" width="36" height="36" stroke-width="1.5"></i>
+        </div>
+        <h3 class="text-2xl font-medium mb-4 text-[#202124] dark:text-[#e8eaed]">Secure Documentation</h3>
+        <p class="text-[#5f6368] dark:text-[#9aa0a6] text-lg leading-relaxed">
+            Encrypted and authenticated access to case documents and hearing records.
+        </p>
+        </div>
+
+        <div class="p-12 rounded-[2rem] bg-[#f1f3f4] dark:bg-[#292a2d] transition-all h-full flex flex-col items-center text-center hover:bg-[#e8eaed] dark:hover:bg-[#3c4043]">
+        <div class="w-20 h-20 rounded-full bg-white dark:bg-[#202124] flex items-center justify-center mb-8 shadow-sm">
+            <i data-lucide="user-check" class="text-[#f29900] dark:text-[#fde293]" width="36" height="36" stroke-width="1.5"></i>
+        </div>
+        <h3 class="text-2xl font-medium mb-4 text-[#202124] dark:text-[#e8eaed]">Verified Access</h3>
+        <p class="text-[#5f6368] dark:text-[#9aa0a6] text-lg leading-relaxed">
+            Dedicated portals for judicial staff, advocates, and the general public.
+        </p>
+        </div>
+    </section>
+</div>
+
+<style>
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+</style>
+
+<script>
+function handleSearch(e) {
+    e.preventDefault();
+    const q = document.getElementById('searchInput').value.trim();
+    if(q) {
+        window.location.href = `/search?q=${encodeURIComponent(q)}`;
+    }
+}
+</script>

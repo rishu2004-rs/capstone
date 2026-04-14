@@ -1,0 +1,57 @@
+<div class="max-w-6xl mx-auto space-y-12">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-12 rounded-[4rem] text-white shadow-2xl relative overflow-hidden">
+        <div class="relative z-10">
+        <h1 class="text-5xl font-black mb-4 tracking-tight">Access Control</h1>
+        <p class="text-slate-400 font-medium max-w-xl text-lg">
+            Manage system users, permissions, and administrative security protocols.
+        </p>
+        </div>
+        <i data-lucide="shield" width="200" height="200" class="absolute -bottom-10 -right-10 text-white/5"></i>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center gap-3 mb-8">
+            <i data-lucide="user-cog" class="text-[#1a73e8]" width="24" height="24"></i>
+            <h2 class="text-2xl font-black dark:text-white">Platform Users</h2>
+        </div>
+        <div class="space-y-4">
+            <div class="p-20 text-center text-slate-400 font-bold border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-3xl">
+                User management module active.
+            </div>
+        </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center gap-3 mb-8">
+            <i data-lucide="key" class="text-amber-500" width="24" height="24"></i>
+            <h2 class="text-2xl font-black dark:text-white">Security Logs</h2>
+        </div>
+        <div class="space-y-4 pb-20">
+            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl">
+                <span class="text-sm font-bold text-slate-600 dark:text-slate-400">System initialization complete</span>
+                <span class="text-xs text-slate-400">Just now</span>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl">
+                <span class="text-sm font-bold text-slate-600 dark:text-slate-400">Database connection switched to local</span>
+                <span class="text-xs text-slate-400">5m ago</span>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            window.location.href = '/login';
+            return;
+        }
+
+        const user = JSON.parse(userStr);
+        if (user.role !== 'admin') {
+            window.location.href = '/';
+        }
+    });
+</script>

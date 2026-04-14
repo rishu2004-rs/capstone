@@ -1,0 +1,62 @@
+<div class="max-w-6xl mx-auto space-y-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#3c4043] p-6 rounded-[2rem] border border-[#dadce0] dark:border-[#5f6368] shadow-sm">
+        <div>
+        <h1 class="text-2xl font-medium text-[#202124] dark:text-[#e8eaed]">Search Results</h1>
+        <p class="text-[#5f6368] dark:text-[#9aa0a6] font-medium mt-1">Found <span id="resultCount">0</span> cases for "<span id="displayQuery"></span>"</p>
+        </div>
+        <form onsubmit="handleSearch(event)" class="flex-1 max-w-xl relative group">
+        <div class="absolute inset-y-0 left-5 flex items-center text-[#5f6368] dark:text-[#9aa0a6]">
+            <i data-lucide="search" width="20" height="20" stroke-width="2"></i>
+        </div>
+        <input
+            type="text"
+            id="searchInput"
+            class="w-full pl-14 pr-28 py-3.5 rounded-full bg-white dark:bg-[#202124] border border-[#dadce0] dark:border-[#5f6368] focus:border-[#1a73e8] dark:focus:border-[#8ab4f8] outline-none transition-all text-sm font-medium text-[#202124] dark:text-[#e8eaed] placeholder-[#9aa0a6]"
+            placeholder="Search Case Number or Title"
+        />
+        <button 
+            type="submit"
+            class="absolute right-1.5 top-1.5 bottom-1.5 px-6 bg-[#1a73e8] text-white rounded-full text-sm font-medium hover:bg-[#1557b0] transition-colors"
+        >
+            Track
+        </button>
+        </form>
+    </div>
+
+    <div id="loadingSkel" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+        <div class="h-48 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+        <div class="h-48 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+        <div class="h-48 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+        <div class="h-48 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+    </div>
+
+    <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+        <!-- Populated by JS -->
+    </div>
+
+    <div id="noResultsMsg" class="hidden text-center py-20 bg-white dark:bg-slate-900 rounded-[3rem]">
+        <div class="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
+        <i data-lucide="search" width="40" height="40"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2 dark:text-white">No cases found</h2>
+        <p class="text-slate-500">We couldn't find any cases matching your search criteria.</p>
+        <a href="/" class="inline-block mt-8 font-bold text-[#1a73e8] hover:underline">Go back home</a>
+    </div>
+
+    <div id="errorMsg" class="hidden text-center py-20 text-red-500 font-bold">
+        Failed to fetch cases. Please try again.
+    </div>
+</div>
+
+<style>
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up-fade {
+    animation: slideUpFade 0.4s ease-out forwards;
+    opacity: 0;
+}
+</style>
+
+<script src="/js/search.js"></script>

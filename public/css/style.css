@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+/* Tailwind is injected via CDN, we just need custom vars */
+
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #1557b0;
+  --secondary: #5f6368;
+  --background: #f8f9fa;
+  --foreground: #202124;
+  --card: #ffffff;
+  --card-foreground: #202124;
+  --accent: #e8eaed;
+  --muted: #f1f3f4;
+  --muted-foreground: #5f6368;
+  --border: #dadce0;
+}
+
+.dark {
+  --background: #202124;
+  --foreground: #e8eaed;
+  --card: #292a2d;
+  --card-foreground: #e8eaed;
+  --accent: #3c4043;
+  --muted: #303134;
+  --muted-foreground: #9aa0a6;
+  --border: #5f6368;
+  --primary: #8ab4f8;
+  --primary-dark: #a8c7fa;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
