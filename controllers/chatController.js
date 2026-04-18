@@ -18,9 +18,10 @@ const getMessages = async (req, res) => {
 const sendMessage = async (req, res) => {
     const { caseId, content, receiverId } = req.body;
 
-    if (!content || !caseId || !receiverId) {
-        return res.status(400).json({ message: 'Content, Case ID, and Receiver ID are required' });
+    if (!content || !caseId) {
+        return res.status(400).json({ message: 'Content and Case ID are required' });
     }
+
 
     const message = new Message({
         caseId,

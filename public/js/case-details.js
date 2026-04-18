@@ -136,12 +136,18 @@ function setupPermissions() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
         const user = JSON.parse(userStr);
+        
+        // Show chat button for all authenticated users
+        const chatBtn = document.getElementById('chatTrigger');
+        if (chatBtn) chatBtn.classList.remove('hidden');
+
         if (user.role === 'admin' || user.role === 'court_staff') {
             document.getElementById('managementCard').classList.remove('hidden');
             document.getElementById('uploadDocForm').classList.remove('hidden');
         }
     }
 }
+
 
 async function handleUpdateStatus(e) {
     e.preventDefault();
@@ -283,23 +289,10 @@ function appendMessage(msg) {
 async function handleChatSubmit(e) {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
 
-    if (!content || !currentCase) return;
-
-    let receiverId = null;
-    if (user.role === 'lawyer') {
-        receiverId = currentCase.client || currentCase.createdBy?._id;
-    } else {
-        receiverId = currentCase.lawyer || currentCase.createdBy?._id;
-    }
-
-    if (!receiverId) {
-        alert('No legal representative or client linked to this case yet.');
-        return;
-    }
+    if (!content) return;
 
     try {
         const res = await fetch('/api/chat', {
@@ -310,18 +303,19 @@ async function handleChatSubmit(e) {
             },
             body: JSON.stringify({
                 caseId: CASE_ID,
-                content: content,
-                receiverId: receiverId
+                content: content
             })
         });
 
         if (res.ok) {
             input.value = '';
-            // No need to fetchMessages() here as socket will receive its own message back
-            // unless we want immediate local feedback. The controller emits to everyone in room.
+        } else {
+            const data = await res.json();
+            alert(data.message || 'Failed to send message');
         }
     } catch (err) {
         console.error('Send error:', err);
     }
 }
+
 
