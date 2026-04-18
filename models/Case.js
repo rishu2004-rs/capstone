@@ -25,6 +25,15 @@ const caseSchema = mongoose.Schema({
     advocate: {
         type: String
     },
+    lawyer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    client: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+
     status: {
         type: String,
         required: true,

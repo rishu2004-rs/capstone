@@ -18,9 +18,10 @@ const userSchema = mongoose.Schema({
     role: {
         type: String,
         required: true,
-        enum: ['admin', 'court_staff', 'public'],
+        enum: ['admin', 'court_staff', 'lawyer', 'public'],
         default: 'public'
     }
+
 }, {
     timestamps: true
 });

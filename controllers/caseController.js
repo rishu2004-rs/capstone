@@ -1,4 +1,5 @@
 const Case = require('../models/Case');
+const QRCode = require('qrcode');
 
 // @desc    Get all cases
 // @route   GET /api/cases
@@ -12,7 +13,7 @@ const getCases = async (req, res) => {
 // @route   POST /api/cases
 // @access  Private/Admin
 const createCase = async (req, res) => {
-    const { caseNumber, title, petitioner, respondent, courtName, advocate, hearingDate, description } = req.body;
+    const { caseNumber, title, petitioner, respondent, courtName, advocate, hearingDate, description, lawyer, client } = req.body;
 
     const caseExists = await Case.findOne({ caseNumber });
 
@@ -27,6 +28,8 @@ const createCase = async (req, res) => {
         respondent,
         courtName,
         advocate,
+        lawyer,
+        client: client || req.user._id, // Default client to creator if not specified
         hearingDate,
         description,
         createdBy: req.user._id
@@ -40,7 +43,10 @@ const createCase = async (req, res) => {
 // @route   GET /api/cases/:id
 // @access  Public
 const getCaseById = async (req, res) => {
-    const caseItem = await Case.findById(req.params.id).populate('createdBy', 'name email');
+    const caseItem = await Case.findById(req.params.id)
+        .populate('createdBy', 'name email')
+        .populate('lawyer', 'name email')
+        .populate('client', 'name email');
 
     if (caseItem) {
         res.json(caseItem);
@@ -53,13 +59,15 @@ const getCaseById = async (req, res) => {
 // @route   PUT /api/cases/update-status/:id
 // @access  Private/Admin/CourtStaff
 const updateCaseStatus = async (req, res) => {
-    const { status, hearingDate } = req.body;
+    const { status, hearingDate, lawyer, client } = req.body;
 
     const caseItem = await Case.findById(req.params.id);
 
     if (caseItem) {
         caseItem.status = status || caseItem.status;
         caseItem.hearingDate = hearingDate || caseItem.hearingDate;
+        if (lawyer) caseItem.lawyer = lawyer;
+        if (client) caseItem.client = client;
 
         // Add to history
         caseItem.history.push({
@@ -74,6 +82,7 @@ const updateCaseStatus = async (req, res) => {
         res.status(404).json({ message: 'Case not found' });
     }
 };
+
 
 // @desc    Upload documents to a case
 // @route   POST /api/cases/:id/documents
@@ -143,6 +152,27 @@ const searchByCaseNumber = async (req, res) => {
     }
 };
 
+// @desc    Get QR code for case access
+// @route   GET /api/cases/:id/qr
+// @access  Public
+const getCaseQRCode = async (req, res) => {
+    try {
+        const caseItem = await Case.findById(req.params.id);
+        if (!caseItem) {
+            return res.status(404).json({ message: 'Case not found' });
+        }
+
+        const protocol = req.protocol;
+        const host = req.get('host');
+        const caseUrl = `${protocol}://${host}/cases/${caseItem._id}`;
+
+        const qrImage = await QRCode.toDataURL(caseUrl);
+        res.json({ qrCode: qrImage, url: caseUrl });
+    } catch (error) {
+        res.status(500).json({ message: 'Error generating QR code', error: error.message });
+    }
+};
+
 module.exports = { 
     getCases, 
     createCase, 
@@ -151,5 +181,7 @@ module.exports = {
     uploadDocument,
     deleteCase, 
     searchCases,
-    searchByCaseNumber
+    searchByCaseNumber,
+    getCaseQRCode
 };
+

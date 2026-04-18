@@ -36,18 +36,25 @@ function showNotFound() {
     document.getElementById('notFoundMsg').classList.remove('hidden');
 }
 
+let currentCase = null;
+let chatInterval = null;
+
 function renderCase(data) {
+    currentCase = data;
     document.getElementById('loadingIndicator').classList.add('hidden');
     document.getElementById('mainContent').classList.remove('hidden');
     document.getElementById('sidebarArea').classList.remove('hidden');
     document.getElementById('sidebarArea').classList.add('block');
 
     document.getElementById('caseNumber').textContent = data.caseNumber;
+    document.getElementById('chatCaseNum').textContent = data.caseNumber;
     document.getElementById('caseTitle').textContent = data.title;
     document.getElementById('caseDescription').textContent = data.description;
     document.getElementById('casePetitioner').textContent = data.petitioner;
     document.getElementById('caseRespondent').textContent = data.respondent;
     document.getElementById('caseCourtName').textContent = data.courtName;
+
+
     document.getElementById('caseHearingDate').textContent = data.hearingDate ? new Date(data.hearingDate).toLocaleDateString() : 'To be scheduled';
 
     // Status Badge
@@ -106,7 +113,24 @@ function renderCase(data) {
     document.getElementById('updateHearingDate').value = data.hearingDate ? data.hearingDate.split('T')[0] : '';
     
     lucide.createIcons();
+    fetchQRCode();
 }
+
+async function fetchQRCode() {
+    try {
+        const res = await fetch(`/api/cases/${CASE_ID}/qr`);
+        if (res.ok) {
+            const data = await res.json();
+            document.getElementById('qrLoading').classList.add('hidden');
+            const qrImg = document.getElementById('qrImage');
+            qrImg.src = data.qrCode;
+            qrImg.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error('QR fetch error:', err);
+    }
+}
+
 
 function setupPermissions() {
     const userStr = localStorage.getItem('user');
@@ -177,3 +201,127 @@ async function handleUploadDoc(e) {
         alert('Network error during upload');
     }
 }
+
+/** CHAT SYSTEM (SOCKET.IO) **/
+let socket = null;
+
+function initSocket() {
+    if (socket) return;
+    socket = io();
+    
+    socket.emit('join_case', CASE_ID);
+
+    socket.on('new_message', (msg) => {
+        // Only append if we don't already have it
+        appendMessage(msg);
+    });
+}
+
+function toggleChat() {
+    const drawer = document.getElementById('chatDrawer');
+    drawer.classList.toggle('open');
+    if (drawer.classList.contains('open')) {
+        initSocket();
+        fetchMessages();
+    }
+}
+
+async function fetchMessages() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const res = await fetch(`/api/chat/${CASE_ID}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+            const messages = await res.json();
+            renderMessages(messages);
+        }
+    } catch (err) {
+        console.error('Chat fetch error:', err);
+    }
+}
+
+function renderMessages(messages) {
+    const container = document.getElementById('chatMessages');
+    if (messages.length === 0) {
+        container.innerHTML = `<div class="text-center py-10 text-slate-400 font-medium">No messages yet. Start the conversation!</div>`;
+        return;
+    }
+    container.innerHTML = '';
+    messages.forEach(msg => appendMessage(msg));
+}
+
+function appendMessage(msg) {
+    const container = document.getElementById('chatMessages');
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // Prevent duplicates
+    const existing = document.getElementById(`msg-${msg._id}`);
+    if (existing) return;
+
+    const isMe = msg.sender._id === user._id;
+    const msgHtml = `
+        <div id="msg-${msg._id}" class="flex ${isMe ? 'justify-end' : 'justify-start'} animate-slide-in-up" style="opacity: 1">
+            <div class="max-w-[80%] ${isMe ? 'bg-[#1a73e8] text-white rounded-t-[1.5rem] rounded-bl-[1.5rem]' : 'bg-slate-100 dark:bg-slate-800 dark:text-white rounded-t-[1.5rem] rounded-br-[1.5rem]'} p-4 shadow-sm">
+                <p class="text-[10px] uppercase font-black ${isMe ? 'text-blue-100' : 'text-slate-400'} mb-1">${msg.sender.name} (${msg.sender.role})</p>
+                <p class="font-medium">${msg.content}</p>
+                <p class="text-[9px] mt-2 opacity-70 text-right">${new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+            </div>
+        </div>
+    `;
+
+    if (container.innerText.includes("No messages yet")) {
+        container.innerHTML = '';
+    }
+
+    container.insertAdjacentHTML('beforeend', msgHtml);
+    container.scrollTop = container.scrollHeight;
+}
+
+async function handleChatSubmit(e) {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+    const input = document.getElementById('chatInput');
+    const content = input.value.trim();
+
+    if (!content || !currentCase) return;
+
+    let receiverId = null;
+    if (user.role === 'lawyer') {
+        receiverId = currentCase.client || currentCase.createdBy?._id;
+    } else {
+        receiverId = currentCase.lawyer || currentCase.createdBy?._id;
+    }
+
+    if (!receiverId) {
+        alert('No legal representative or client linked to this case yet.');
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                caseId: CASE_ID,
+                content: content,
+                receiverId: receiverId
+            })
+        });
+
+        if (res.ok) {
+            input.value = '';
+            // No need to fetchMessages() here as socket will receive its own message back
+            // unless we want immediate local feedback. The controller emits to everyone in room.
+        }
+    } catch (err) {
+        console.error('Send error:', err);
+    }
+}
+
