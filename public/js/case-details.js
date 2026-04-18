@@ -57,34 +57,36 @@ function renderCase(data) {
 
     document.getElementById('caseHearingDate').textContent = data.hearingDate ? new Date(data.hearingDate).toLocaleDateString() : 'To be scheduled';
 
-    // Status Badge
+    // Status Badge (Atlas Style)
     const statusConfig = {
-        'pending': { color: 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400', label: 'Pending' },
-        'in_progress': { color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400', label: 'In Progress' },
-        'closed': { color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400', label: 'Closed' }
+        'pending': { color: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300', label: 'Pending' },
+        'in_progress': { color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300', label: 'In Progress' },
+        'closed': { color: 'bg-[#C1EAD1] text-[#00684A] dark:bg-[#00684A]/30 dark:text-[#00ED64]', label: 'Closed' }
     };
-    const sc = statusConfig[data.status.toLowerCase().replace(' ', '_')] || { color: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300', label: data.status };
-    document.getElementById('statusBadgeContainer').innerHTML = `<span class="px-4 py-2 text-sm font-bold rounded-full border border-current ${sc.color}">${data.status}</span>`;
+    const sc = statusConfig[data.status.toLowerCase().replace(' ', '_')] || { color: 'bg-slate-100 text-slate-700 dark:bg-[#023448] dark:text-slate-300', label: data.status };
+    document.getElementById('statusBadgeContainer').innerHTML = `<span class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-md ${sc.color}">${data.status}</span>`;
 
     // History Timeline
     const timeline = document.getElementById('historyTimeline');
     timeline.innerHTML = '';
     if (data.history && data.history.length > 0) {
         data.history.slice().reverse().forEach(entry => {
-            const scEntry = statusConfig[entry.status?.toLowerCase().replace(' ', '_')] || { color: 'text-slate-500', label: entry.status };
+            const scEntry = statusConfig[entry.status?.toLowerCase().replace(' ', '_')] || { color: 'text-slate-400', label: entry.status };
             timeline.innerHTML += `
                 <div class="relative pl-10">
-                    <div class="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-4 border-[#1a73e8] dark:border-[#8ab4f8] z-10"></div>
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                        <span class="px-2 py-1 text-xs font-bold rounded-lg border border-current ${scEntry.color}">${scEntry.label || entry.status}</span>
-                        <span class="text-xs font-bold text-slate-400">${new Date(entry.updatedAt).toLocaleString()}</span>
+                    <div class="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-white dark:bg-[#001E2B] border-4 border-[#E8EDEB] dark:border-[#1C2D38] z-10"></div>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9px] font-black uppercase tracking-widest ${scEntry.color}">${scEntry.label || entry.status}</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">${new Date(entry.updatedAt).toLocaleString()}</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-[#889397] font-medium leading-relaxed">System state updated by ${entry.updatedBy?.name || 'System'}</p>
                     </div>
-                    <p class="mt-2 text-slate-600 dark:text-slate-400 font-medium">Updated by ${entry.updatedBy?.name || 'System'}</p>
                 </div>
             `;
         });
     } else {
-        timeline.innerHTML = `<p class="text-slate-400 font-medium pl-2">Created on ${new Date(data.createdAt).toLocaleDateString()}</p>`;
+        timeline.innerHTML = `<p class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Initial Node Sync: ${new Date(data.createdAt).toLocaleDateString()}</p>`;
     }
 
     // Documents List
@@ -93,19 +95,19 @@ function renderCase(data) {
     if (data.documents && data.documents.length > 0) {
         data.documents.forEach(doc => {
             docsList.innerHTML += `
-                <a href="${doc.url}" target="_blank" rel="noreferrer" class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl group hover:bg-emerald-500 transition-all">
+                <a href="${doc.url}" target="_blank" rel="noreferrer" class="flex items-center justify-between p-4 bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] rounded-xl group hover:border-[#00ED64] transition-all">
                     <div class="flex items-center gap-3">
-                        <div class="p-2 bg-white dark:bg-slate-700 rounded-lg group-hover:bg-white/20">
-                            <i data-lucide="file-text" width="16" height="16" class="text-slate-400 group-hover:text-white"></i>
+                        <div class="p-2 bg-white dark:bg-[#001E2B] border border-[#E8EDEB] dark:border-[#1C2D38] rounded group-hover:bg-[#00ED64]/10 transition-colors">
+                            <i data-lucide="file-text" width="14" height="14" class="text-slate-400 group-hover:text-[#00ED64]"></i>
                         </div>
-                        <span class="font-bold text-sm text-slate-700 dark:text-slate-300 group-hover:text-white">${doc.name}</span>
+                        <span class="font-bold text-xs text-slate-700 dark:text-slate-300 group-hover:text-[#00ED64] transition-colors">${doc.name}</span>
                     </div>
-                    <i data-lucide="external-link" width="16" height="16" class="text-slate-300 group-hover:text-white"></i>
+                    <i data-lucide="external-link" width="14" height="14" class="text-slate-300 group-hover:text-[#00ED64]"></i>
                 </a>
             `;
         });
     } else {
-        docsList.innerHTML = `<p class="text-slate-400 font-medium text-center py-4 italic">No documents attached.</p>`;
+        docsList.innerHTML = `<p class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center py-4 italic">No Document Objects Found</p>`;
     }
 
     // Set Update Form initial values
@@ -262,11 +264,14 @@ function appendMessage(msg) {
 
     const isMe = msg.sender._id === user._id;
     const msgHtml = `
-        <div id="msg-${msg._id}" class="flex ${isMe ? 'justify-end' : 'justify-start'} animate-slide-in-up" style="opacity: 1">
-            <div class="max-w-[80%] ${isMe ? 'bg-[#1a73e8] text-white rounded-t-[1.5rem] rounded-bl-[1.5rem]' : 'bg-slate-100 dark:bg-slate-800 dark:text-white rounded-t-[1.5rem] rounded-br-[1.5rem]'} p-4 shadow-sm">
-                <p class="text-[10px] uppercase font-black ${isMe ? 'text-blue-100' : 'text-slate-400'} mb-1">${msg.sender.name} (${msg.sender.role})</p>
-                <p class="font-medium">${msg.content}</p>
-                <p class="text-[9px] mt-2 opacity-70 text-right">${new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+        <div id="msg-${msg._id}" class="flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in">
+            <div class="max-w-[85%] ${isMe ? 'bg-[#00ED64]/10 border border-[#00ED64]/20 rounded-l-xl rounded-tr-xl' : 'bg-slate-50 dark:bg-[#023448]/50 border border-[#E8EDEB] dark:border-[#1C2D38] rounded-r-xl rounded-tl-xl'} p-4">
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="text-[9px] font-black uppercase tracking-widest ${isMe ? 'text-[#00ED64]' : 'text-[#889397]'}">${msg.sender.name}</span>
+                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.1em]">${msg.sender.role}</span>
+                </div>
+                <p class="text-sm font-medium ${isMe ? 'dark:text-white' : 'dark:text-[#889397]'}">${msg.content}</p>
+                <p class="text-[8px] mt-2 font-bold text-slate-400 uppercase text-right">${new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
             </div>
         </div>
     `;

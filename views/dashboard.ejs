@@ -1,182 +1,200 @@
-<div class="space-y-10 max-w-[1400px] mx-auto">
+<div class="space-y-8 max-w-[1400px] mx-auto">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-    <div>
-        <h1 class="text-4xl font-black dark:text-white mb-2">Command Center</h1>
-        <p class="text-slate-500 font-medium">System overview and case management</p>
-    </div>
-    
-    <button 
-        id="addCaseBtn"
-        onclick="openAddModal()"
-        class="hidden flex items-center gap-2 bg-slate-900 dark:bg-[#1a73e8] text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:opacity-90 transition-all"
-    >
-        <i data-lucide="plus" width="20" height="20"></i>
-        Add New Case
-    </button>
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-[#001E2B] p-8 rounded-2xl border border-[#E8EDEB] dark:border-[#1C2D38]">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-2 h-2 bg-[#00ED64] rounded-full animate-pulse"></span>
+                <span class="text-[10px] font-black text-[#00ED64] uppercase tracking-[0.2em]">System Online</span>
+            </div>
+            <h1 class="text-3xl font-black dark:text-white mb-1 tracking-tight">Case Clusters</h1>
+            <p class="text-slate-500 dark:text-[#889397] font-medium text-sm">Real-time legal database management and monitoring</p>
+        </div>
+        
+        <button 
+            id="addCaseBtn"
+            onclick="openAddModal()"
+            class="hidden flex items-center gap-2 bg-[#00ED64] text-[#001E2B] px-6 py-3 rounded-lg font-black text-xs uppercase tracking-widest shadow-lg shadow-[#00ED64]/20 hover:bg-[#00D158] transition-all"
+        >
+            <i data-lucide="plus" width="16" height="16" stroke-width="3"></i>
+            Create New Case
+        </button>
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-            <div class="p-4 rounded-2xl bg-blue-50 text-blue-500 dark:bg-blue-900/20">
-                <i data-lucide="bar-chart-3" width="24" height="24"></i>
-            </div>
-            <div class="flex flex-col items-end">
-                <span id="statTotal" class="text-3xl font-black dark:text-white">-</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Total Cases</span>
-            </div>
-            </div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-            <div class="p-4 rounded-2xl bg-amber-50 text-amber-500 dark:bg-amber-900/20">
-                <i data-lucide="clock" width="24" height="24"></i>
-            </div>
-            <div class="flex flex-col items-end">
-                <span id="statPending" class="text-3xl font-black dark:text-white">-</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Pending</span>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-[#001E2B] p-6 rounded-xl border border-[#E8EDEB] dark:border-[#1C2D38] hover:border-[#00ED64] transition-colors group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Total Documents</span>
+                    <h3 id="statTotal" class="text-3xl font-black dark:text-white mt-1">-</h3>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 dark:bg-[#023448] text-slate-400 group-hover:text-[#00ED64] transition-colors">
+                    <i data-lucide="database" width="20" height="20"></i>
+                </div>
             </div>
         </div>
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-            <div class="p-4 rounded-2xl bg-blue-50 text-[#1a73e8] dark:bg-blue-900/20">
-                <i data-lucide="alert-circle" width="24" height="24"></i>
-            </div>
-            <div class="flex flex-col items-end">
-                <span id="statActive" class="text-3xl font-black dark:text-white">-</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Active</span>
-            </div>
+        <div class="bg-white dark:bg-[#001E2B] p-6 rounded-xl border border-[#E8EDEB] dark:border-[#1C2D38] hover:border-amber-500 transition-colors group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Pending Sync</span>
+                    <h3 id="statPending" class="text-3xl font-black dark:text-white mt-1">-</h3>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 dark:bg-[#023448] text-slate-400 group-hover:text-amber-500 transition-colors">
+                    <i data-lucide="refresh-cw" width="20" height="20"></i>
+                </div>
             </div>
         </div>
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-            <div class="p-4 rounded-2xl bg-emerald-50 text-emerald-500 dark:bg-emerald-900/20">
-                <i data-lucide="check-circle-2" width="24" height="24"></i>
+        <div class="bg-white dark:bg-[#001E2B] p-6 rounded-xl border border-[#E8EDEB] dark:border-[#1C2D38] hover:border-[#1a73e8] transition-colors group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Active Operations</span>
+                    <h3 id="statActive" class="text-3xl font-black dark:text-white mt-1">-</h3>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 dark:bg-[#023448] text-slate-400 group-hover:text-[#1a73e8] transition-colors">
+                    <i data-lucide="activity" width="20" height="20"></i>
+                </div>
             </div>
-            <div class="flex flex-col items-end">
-                <span id="statClosed" class="text-3xl font-black dark:text-white">-</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Closed</span>
-            </div>
+        </div>
+        <div class="bg-white dark:bg-[#001E2B] p-6 rounded-xl border border-[#E8EDEB] dark:border-[#1C2D38] hover:border-[#00ED64] transition-colors group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Resolved</span>
+                    <h3 id="statClosed" class="text-3xl font-black dark:text-white mt-1">-</h3>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 dark:bg-[#023448] text-slate-400 group-hover:text-[#00ED64] transition-colors">
+                    <i data-lucide="check-circle-2" width="20" height="20"></i>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm">
-    <div class="p-8 border-b border-slate-50 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <h2 class="text-2xl font-black dark:text-white">Recent Cases</h2>
-        <div class="flex items-center gap-4">
-        <div class="relative">
-            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                <i data-lucide="search" width="18" height="18"></i>
+    <div class="bg-white dark:bg-[#001E2B] rounded-2xl border border-[#E8EDEB] dark:border-[#1C2D38] overflow-hidden shadow-sm">
+        <div class="p-6 border-b border-[#E8EDEB] dark:border-[#1C2D38] bg-slate-50/50 dark:bg-[#023448]/20 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <i data-lucide="layers" class="text-[#00ED64]" width="20" height="20"></i>
+                <h2 class="text-lg font-black dark:text-white uppercase tracking-wider">Document Collections</h2>
             </div>
-            <input 
-            type="text" 
-            id="searchInput"
-            placeholder="Find a case..."
-            class="pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none outline-none focus:ring-2 ring-[#1a73e8]/50 w-full md:w-64 transition-all"
-            onkeyup="filterCases()"
-            />
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                        <i data-lucide="search" width="14" height="14"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Filter by case # or title..."
+                        class="pl-10 pr-4 py-2 text-sm rounded-lg bg-white dark:bg-[#001E2B] border border-[#E8EDEB] dark:border-[#1C2D38] outline-none focus:border-[#00ED64] w-full md:w-64 transition-all dark:text-white"
+                        onkeyup="filterCases()"
+                    />
+                </div>
+                <button class="p-2.5 bg-white dark:bg-[#001E2B] text-slate-500 border border-[#E8EDEB] dark:border-[#1C2D38] rounded-lg hover:border-[#00ED64] transition-colors">
+                    <i data-lucide="filter" width="16" height="16"></i>
+                </button>
+            </div>
         </div>
-        <button class="p-3 bg-slate-50 dark:bg-slate-800 text-slate-500 rounded-xl hover:bg-slate-100 transition-colors">
-            <i data-lucide="filter" width="20" height="20"></i>
-        </button>
-        </div>
-    </div>
 
-    <div class="overflow-x-auto">
-        <table class="w-full text-left">
-        <thead>
-            <tr class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-500 text-xs font-black uppercase tracking-widest">
-            <th class="px-8 py-4">Case #</th>
-            <th class="px-8 py-4">Title</th>
-            <th class="px-8 py-4">Status</th>
-            <th class="px-8 py-4">Petitioner / Respondent</th>
-            <th class="px-8 py-4 text-right">Action</th>
-            </tr>
-        </thead>
-        <tbody id="casesTableBody" class="divide-y divide-slate-50 dark:divide-slate-800">
-            <!-- Populated via JS -->
-        </tbody>
-        </table>
-        <div id="noCasesMsg" class="hidden p-20 text-center text-slate-400 font-bold">
-            No cases found matching your search.
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-[#023448]/30 border-b border-[#E8EDEB] dark:border-[#1C2D38]">
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Case ID</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Title / Schema</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">State</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Principals</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-black text-slate-500 dark:text-[#889397] uppercase tracking-widest">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="casesTableBody" class="divide-y divide-[#E8EDEB] dark:divide-[#1C2D38]">
+                    <!-- Populated via JS -->
+                </tbody>
+            </table>
+            <div id="noCasesMsg" class="hidden p-20 text-center">
+                <i data-lucide="search-x" class="mx-auto text-slate-300 mb-4" width="48" height="48"></i>
+                <p class="text-slate-400 font-bold">No documents match the current filter criteria.</p>
+            </div>
         </div>
-    </div>
     </div>
 
     <!-- Add Case Modal -->
     <div id="addModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fade-in" onclick="closeAddModal()"></div>
-        <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl overflow-hidden animate-slide-up">
-            <div class="p-10">
-            <h2 class="text-3xl font-black dark:text-white mb-8">New Case Registry</h2>
-            <form onsubmit="handleAddCase(event)" class="space-y-6">
-                <div class="grid grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Case Number</label>
-                    <input type="text" id="caseNumber" required
-                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-[#1a73e8] outline-none transition-all dark:text-white font-bold"
-                    placeholder="e.g. CASE-2024-001" />
-                </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Title</label>
-                    <input type="text" id="caseTitle" required
-                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-[#1a73e8] outline-none transition-all dark:text-white font-bold"
-                    placeholder="Property Dispute..." />
-                </div>
+        <div class="absolute inset-0 bg-[#001E2B]/80 backdrop-blur-sm animate-fade-in" onclick="closeAddModal()"></div>
+        <div class="relative w-full max-w-2xl bg-white dark:bg-[#001E2B] rounded-2xl border border-[#1C2D38] shadow-2xl overflow-hidden animate-slide-up">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="p-2 bg-[#00ED64]/10 rounded-lg">
+                        <i data-lucide="plus-square" class="text-[#00ED64]" width="24" height="24"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black dark:text-white tracking-tight">Insert Document</h2>
+                        <p class="text-xs text-[#889397] font-bold uppercase tracking-widest">New Case Registry</p>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Petitioner</label>
-                    <input type="text" id="petitioner" required
-                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-[#1a73e8] outline-none transition-all dark:text-white font-bold" />
-                </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Respondent</label>
-                    <input type="text" id="respondent" required
-                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-[#1a73e8] outline-none transition-all dark:text-white font-bold" />
-                </div>
-                </div>
+                <form onsubmit="handleAddCase(event)" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-[#889397] tracking-widest ml-1">Case Number</label>
+                            <input type="text" id="caseNumber" required
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] focus:border-[#00ED64] outline-none transition-all dark:text-white font-medium"
+                            placeholder="CASE-2024-XXX" />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-[#889397] tracking-widest ml-1">Case Title</label>
+                            <input type="text" id="caseTitle" required
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] focus:border-[#00ED64] outline-none transition-all dark:text-white font-medium"
+                            placeholder="Brief Title..." />
+                        </div>
+                    </div>
 
-                <div class="grid grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Court Name</label>
-                    <input type="text" id="courtName" required
-                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-[#1a73e8] outline-none transition-all dark:text-white font-bold" />
-                </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Next Hearing</label>
-                    <input type="date" id="hearingDate"
-                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-[#1a73e8] outline-none transition-all dark:text-white font-bold" />
-                </div>
-                </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-[#889397] tracking-widest ml-1">Petitioner</label>
+                            <input type="text" id="petitioner" required
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] focus:border-[#00ED64] outline-none transition-all dark:text-white font-medium" />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-[#889397] tracking-widest ml-1">Respondent</label>
+                            <input type="text" id="respondent" required
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] focus:border-[#00ED64] outline-none transition-all dark:text-white font-medium" />
+                        </div>
+                    </div>
 
-                <div class="space-y-2">
-                <label class="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Description</label>
-                <textarea id="description" required rows="3"
-                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-[#1a73e8] outline-none transition-all dark:text-white font-bold resize-none"></textarea>
-                </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-[#889397] tracking-widest ml-1">Court</label>
+                            <input type="text" id="courtName" required
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] focus:border-[#00ED64] outline-none transition-all dark:text-white font-medium" />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-[#889397] tracking-widest ml-1">Hearing Date</label>
+                            <input type="date" id="hearingDate"
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] focus:border-[#00ED64] outline-none transition-all dark:text-white font-medium" />
+                        </div>
+                    </div>
 
-                <div class="flex gap-4 pt-4">
-                <button type="button" onclick="closeAddModal()"
-                    class="flex-1 py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-2xl font-bold hover:bg-slate-200 transition-all">
-                    Cancel
-                </button>
-                <button type="submit"
-                    class="flex-[2] py-4 bg-[#1a73e8] text-white rounded-2xl font-bold shadow-xl shadow-[#1a73e8]/30 hover:opacity-90 transition-all">
-                    Create Case
-                </button>
-                </div>
-            </form>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-[#889397] tracking-widest ml-1">Case Description</label>
+                        <textarea id="description" required rows="3"
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-[#023448]/30 border border-[#E8EDEB] dark:border-[#1C2D38] focus:border-[#00ED64] outline-none transition-all dark:text-white font-medium resize-none"></textarea>
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+                        <button type="button" onclick="closeAddModal()"
+                            class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 dark:hover:bg-[#023448] rounded-lg transition-all">
+                            Discard
+                        </button>
+                        <button type="submit"
+                            class="flex-[2] py-3 bg-[#00ED64] text-[#001E2B] rounded-lg font-black text-xs uppercase tracking-widest hover:bg-[#00D158] transition-all shadow-lg shadow-[#00ED64]/20">
+                            Insert Document
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <style>
 @keyframes slideUp {

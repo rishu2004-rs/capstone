@@ -56,40 +56,50 @@ function renderCases(casesToRender) {
         
         casesToRender.forEach(c => {
             const tr = document.createElement('tr');
-            tr.className = "group hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors";
+            tr.className = "group hover:bg-[#00ED64]/5 dark:hover:bg-[#00ED64]/5 transition-colors border-b border-[#E8EDEB] dark:border-[#1C2D38]";
             
-            // Generate status badge logic
+            // Generate status badge logic (Atlas Style)
             const statusConfig = {
-                'pending': { color: 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400', label: 'Pending' },
-                'in_progress': { color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400', label: 'In Progress' },
-                'closed': { color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400', label: 'Closed' }
+                'pending': { color: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300', label: 'Pending' },
+                'in_progress': { color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300', label: 'In Progress' },
+                'closed': { color: 'bg-[#C1EAD1] text-[#00684A] dark:bg-[#00684A]/30 dark:text-[#00ED64]', label: 'Closed' }
             };
             const sc = statusConfig[c.status] || statusConfig['pending'];
-            const roundedBadge = `<span class="px-3 py-1 text-xs font-bold rounded-full border border-current ${sc.color}">${sc.label}</span>`;
+            const roundedBadge = `<span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-md ${sc.color}">${sc.label}</span>`;
 
             tr.innerHTML = `
-                <td class="px-8 py-6">
-                    <span class="font-bold text-slate-900 dark:text-white">${c.caseNumber}</span>
-                </td>
-                <td class="px-8 py-6">
-                    <div class="flex flex-col">
-                        <span class="font-bold text-slate-900 dark:text-white">${c.title}</span>
-                        <span class="text-xs text-slate-500">${c.courtName}</span>
+                <td class="px-6 py-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full ${c.status === 'closed' ? 'bg-[#00ED64]' : 'bg-amber-400'}"></div>
+                        <span class="font-mono text-xs font-bold text-slate-500 dark:text-[#889397]">${c.caseNumber}</span>
                     </div>
                 </td>
-                <td class="px-8 py-6">
+                <td class="px-6 py-5">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-slate-900 dark:text-white leading-tight">${c.title}</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${c.courtName}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-5">
                     ${roundedBadge}
                 </td>
-                <td class="px-8 py-6">
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm font-medium text-slate-700 dark:text-slate-300">${c.petitioner}</span>
-                        <span class="text-slate-400 text-xs font-bold">VS</span>
-                        <span class="text-sm font-medium text-slate-700 dark:text-slate-300">${c.respondent}</span>
+                <td class="px-6 py-5">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-black text-slate-400 uppercase w-8">PET</span>
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${c.petitioner}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-black text-slate-400 uppercase w-8">RES</span>
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${c.respondent}</span>
+                        </div>
                     </div>
                 </td>
-                <td class="px-8 py-6 text-right">
-                    <a href="/case/${c._id}" class="inline-flex items-center justify-center p-2 text-slate-400 hover:text-[#1a73e8] rounded-lg hover:bg-white dark:hover:bg-slate-700 transition-all">
-                        <i data-lucide="chevron-right" width="20" height="20"></i>
+                <td class="px-6 py-5 text-right">
+                    <a href="/case/${c._id}" class="inline-flex items-center justify-center px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#001E2B] dark:text-white bg-slate-100 dark:bg-[#023448] border border-[#E8EDEB] dark:border-[#1C2D38] rounded hover:border-[#00ED64] transition-all">
+                        Inspect
                     </a>
                 </td>
             `;
@@ -99,6 +109,7 @@ function renderCases(casesToRender) {
         lucide.createIcons();
     }
 }
+
 
 function filterCases() {
     const term = document.getElementById('searchInput').value.toLowerCase();

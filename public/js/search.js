@@ -64,48 +64,47 @@ function renderResults(data) {
     grid.innerHTML = '';
     
     const statusConfig = {
-        'pending': { color: 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400', label: 'Pending' },
-        'in_progress': { color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400', label: 'In Progress' },
-        'closed': { color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400', label: 'Closed' }
+        'pending': { color: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300', label: 'Pending' },
+        'in_progress': { color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300', label: 'In Progress' },
+        'closed': { color: 'bg-[#C1EAD1] text-[#00684A] dark:bg-[#00684A]/30 dark:text-[#00ED64]', label: 'Closed' }
     };
 
     data.forEach((item, idx) => {
-        const sc = statusConfig[item.status.toLowerCase().replace(' ', '_')] || { color: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300', label: item.status };
-        const badge = `<span class="px-3 py-1 text-xs font-bold rounded-full border border-current ${sc.color}">${sc.label}</span>`;
+        const sc = statusConfig[item.status.toLowerCase().replace(' ', '_')] || { color: 'bg-slate-100 text-slate-700 dark:bg-[#023448] dark:text-slate-300', label: item.status };
+        const badge = `<span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md ${sc.color}">${sc.label}</span>`;
         const hearing = item.hearingDate ? new Date(item.hearingDate).toLocaleDateString() : 'TBA';
 
-        const delay = idx * 0.1;
+        const delay = idx * 0.05;
 
         grid.innerHTML += `
-            <div class="animate-slide-up-fade" style="animation-delay: ${delay}s">
-                <a href="/case/${item._id}" class="block group bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 hover:border-[#1a73e8]/50 hover:shadow-xl hover:shadow-[#1a73e8]/5 transition-all h-full flex flex-col">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg text-xs font-bold uppercase tracking-wider">
-                            ${item.caseNumber}
+            <div class="animate-fade-in" style="animation-delay: ${delay}s">
+                <a href="/case/${item._id}" class="block group bg-white dark:bg-[#001E2B] p-8 rounded-2xl border border-[#E8EDEB] dark:border-[#1C2D38] hover:border-[#00ED64]/50 hover:shadow-xl hover:shadow-[#00ED64]/5 transition-all h-full flex flex-col">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center gap-2">
+                            <div class="p-1.5 bg-[#00ED64]/10 rounded">
+                                <i data-lucide="database" class="text-[#00ED64]" width="14" height="14"></i>
+                            </div>
+                            <span class="text-[10px] font-black text-[#889397] uppercase tracking-widest">${item.caseNumber}</span>
                         </div>
                         ${badge}
                     </div>
                     
-                    <h3 class="text-xl font-bold mb-4 dark:text-white group-hover:text-[#1a73e8] transition-colors">${item.title}</h3>
+                    <h3 class="text-xl font-black mb-6 dark:text-white group-hover:text-[#00ED64] transition-colors tracking-tight">${item.title}</h3>
                     
-                    <div class="space-y-3 flex-1">
-                        <div class="flex items-center gap-2 text-slate-500 text-sm font-medium">
-                            <i data-lucide="map-pin" width="16" height="16" class="text-slate-400"></i>
+                    <div class="space-y-4 flex-1">
+                        <div class="flex items-center gap-3 text-slate-500 dark:text-[#889397] text-xs font-bold uppercase tracking-widest">
+                            <i data-lucide="map-pin" width="14" height="14" class="text-slate-400"></i>
                             ${item.courtName}
                         </div>
-                        <div class="flex items-center gap-2 text-slate-500 text-sm font-medium">
-                            <i data-lucide="calendar" width="16" height="16" class="text-slate-400"></i>
-                            Next Hearing: ${hearing}
-                        </div>
-                        <div class="flex items-center gap-2 text-slate-500 text-sm font-medium">
-                            <i data-lucide="user" width="16" height="16" class="text-slate-400"></i>
-                            P: ${item.petitioner} vs R: ${item.respondent}
+                        <div class="flex items-center gap-3 text-slate-500 dark:text-[#889397] text-xs font-bold uppercase tracking-widest">
+                            <i data-lucide="calendar" width="14" height="14" class="text-[#00ED64]"></i>
+                            Hearing: ${hearing}
                         </div>
                     </div>
 
-                    <div class="mt-6 pt-6 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between group-hover:bg-blue-50/50 dark:group-hover:bg-blue-900/10 rounded-b-3xl -mx-6 -mb-6 px-6 py-4 transition-colors">
-                        <span class="text-[#1a73e8] font-bold text-sm">View Details</span>
-                        <i data-lucide="chevron-right" width="20" height="20" class="text-[#1a73e8] group-hover:translate-x-1 transition-transform"></i>
+                    <div class="mt-8 pt-6 border-t border-[#E8EDEB] dark:border-[#1C2D38] flex items-center justify-between">
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em] text-[#889397] group-hover:text-[#00ED64] transition-colors">Inspect Document</span>
+                        <i data-lucide="arrow-right" width="16" height="16" class="text-slate-300 group-hover:text-[#00ED64] group-hover:translate-x-1 transition-all"></i>
                     </div>
                 </a>
             </div>
