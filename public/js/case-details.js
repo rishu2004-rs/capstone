@@ -223,14 +223,7 @@ function initSocket() {
     });
 }
 
-function toggleChat() {
-    const drawer = document.getElementById('chatDrawer');
-    drawer.classList.toggle('open');
-    if (drawer.classList.contains('open')) {
-        initSocket();
-        fetchMessages();
-    }
-}
+
 
 async function fetchMessages() {
     const token = localStorage.getItem('token');
