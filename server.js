@@ -62,10 +62,30 @@ io.on("connection", (socket) => {
         console.log(`User joined case room: ${caseId}`);
     });
 
+    socket.on("send_message", async (data) => {
+        const { caseId, senderId, content } = data;
+        try {
+            const Message = require("./models/Message");
+            const newMessage = new Message({
+                caseId,
+                sender: senderId,
+                content
+            });
+            await newMessage.save();
+            const populated = await Message.findById(newMessage._id).populate("sender", "name role");
+            
+            // Broadcast to the specifically joined case room
+            io.to(caseId).emit("new_message", populated);
+        } catch (err) {
+            console.error("Socket Message Error:", err);
+        }
+    });
+
     socket.on("disconnect", () => {
-        // Handle disconnect if needed
+        // Handle disconnect
     });
 });
+
 
 // Attach io to app to use in controllers
 app.set("io", io);

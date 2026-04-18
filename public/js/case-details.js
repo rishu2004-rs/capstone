@@ -281,34 +281,21 @@ function appendMessage(msg) {
 
 async function handleChatSubmit(e) {
     e.preventDefault();
-    const token = localStorage.getItem('token');
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
+    const user = JSON.parse(localStorage.getItem('user'));
 
-    if (!content) return;
+    if (!content || !socket) return;
 
-    try {
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                caseId: CASE_ID,
-                content: content
-            })
-        });
+    // Fast Emit via Socket instead of HTTP
+    socket.emit('send_message', {
+        caseId: CASE_ID,
+        senderId: user.id || user._id,
+        content: content
+    });
 
-        if (res.ok) {
-            input.value = '';
-        } else {
-            const data = await res.json();
-            alert(data.message || 'Failed to send message');
-        }
-    } catch (err) {
-        console.error('Send error:', err);
-    }
+    input.value = '';
 }
+
 
 
