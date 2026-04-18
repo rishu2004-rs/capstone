@@ -164,7 +164,7 @@ const getCaseQRCode = async (req, res) => {
 
         const protocol = req.protocol;
         const host = req.get('host');
-        const caseUrl = `${protocol}://${host}/cases/${caseItem._id}`;
+        const caseUrl = `${protocol}://${host}/case/${caseItem._id}`;
 
         const qrImage = await QRCode.toDataURL(caseUrl);
         res.json({ qrCode: qrImage, url: caseUrl });
