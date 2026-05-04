@@ -115,23 +115,9 @@ function renderCase(data) {
     document.getElementById('updateHearingDate').value = data.hearingDate ? data.hearingDate.split('T')[0] : '';
     
     lucide.createIcons();
-    fetchQRCode();
 }
 
-async function fetchQRCode() {
-    try {
-        const res = await fetch(`/api/cases/${CASE_ID}/qr`);
-        if (res.ok) {
-            const data = await res.json();
-            document.getElementById('qrLoading').classList.add('hidden');
-            const qrImg = document.getElementById('qrImage');
-            qrImg.src = data.qrCode;
-            qrImg.classList.remove('hidden');
-        }
-    } catch (err) {
-        console.error('QR fetch error:', err);
-    }
-}
+
 
 
 function setupPermissions() {

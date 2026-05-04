@@ -162,9 +162,9 @@ const getCaseQRCode = async (req, res) => {
             return res.status(404).json({ message: 'Case not found' });
         }
 
-        const protocol = req.protocol;
-        const host = req.get('host');
-        const caseUrl = `${protocol}://${host}/case/${caseItem._id}`;
+        // Use RENDER_URL from env if available, or hardcoded render URL to avoid localhost when testing
+        const renderUrl = process.env.RENDER_URL || 'https://ecourt-backend.onrender.com';
+        const caseUrl = `${renderUrl}/case/${caseItem._id}`;
 
         const qrImage = await QRCode.toDataURL(caseUrl);
         res.json({ qrCode: qrImage, url: caseUrl });

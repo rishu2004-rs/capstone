@@ -119,10 +119,14 @@
             </div>
             
             <div id="qrContainer" class="flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-[#023448]/30 rounded-xl border border-dashed border-[#E8EDEB] dark:border-[#1C2D38]">
-                <div id="qrLoading" class="py-8">
-                    <div class="w-6 h-6 border-2 border-[#00ED64] border-t-transparent rounded-full animate-spin"></div>
-                </div>
-                <img id="qrImage" class="hidden w-40 h-40 rounded-lg shadow-sm mb-4 border-4 border-white" src="" alt="Case QR Code">
+                <% if (typeof qrCode !== 'undefined' && qrCode) { %>
+                    <img id="qrImage" class="w-40 h-40 rounded-lg shadow-sm mb-4 border-4 border-white" src="<%= qrCode %>" alt="Case QR Code">
+                <% } else { %>
+                    <div id="qrLoading" class="py-8">
+                        <div class="w-6 h-6 border-2 border-[#00ED64] border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <img id="qrImage" class="hidden w-40 h-40 rounded-lg shadow-sm mb-4 border-4 border-white" src="" alt="Case QR Code">
+                <% } %>
                 <p class="text-[9px] uppercase font-black text-slate-400 tracking-widest text-center">Node Address Verification</p>
             </div>
             

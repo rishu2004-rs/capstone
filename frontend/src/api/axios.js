@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  // Replace 'https://your-app-name.onrender.com/api' with your actual Render URL
+  baseURL: import.meta.env?.VITE_API_URL || 'https://your-app-name.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
