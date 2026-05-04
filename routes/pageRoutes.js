@@ -8,10 +8,33 @@ router.get("/", (req, res) => res.render("home"));
 router.get("/login", (req, res) => res.render("login"));
 router.get("/register", (req, res) => res.render("register"));
 router.get("/dashboard", (req, res) => res.render("dashboard"));
+const os = require('os');
+
+function getLocalIp() {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            if (iface.family === 'IPv4' && !iface.internal) {
+                return iface.address;
+            }
+        }
+    }
+    return 'localhost';
+}
+
 router.get("/case/:id", async (req, res) => {
     try {
-        // Force the Render URL even when testing locally so the QR code works on mobile
-        const renderUrl = process.env.RENDER_URL || 'https://ecourt-backend.onrender.com';
+        let renderUrl = process.env.RENDER_URL;
+        if (!renderUrl) {
+            const host = req.get('host');
+            if (host.includes('localhost')) {
+                // Replace localhost with actual LAN IP so phones can connect
+                renderUrl = `http://${getLocalIp()}:${process.env.PORT || 5000}`;
+            } else {
+                renderUrl = `${req.protocol}://${host}`;
+            }
+        }
+        
         const caseUrl = `${renderUrl}/case/${req.params.id}`;
         const qrCode = await QRCode.toDataURL(caseUrl);
         res.render("case-details", { caseId: req.params.id, renderUrl, qrCode });

@@ -162,8 +162,28 @@ const getCaseQRCode = async (req, res) => {
             return res.status(404).json({ message: 'Case not found' });
         }
 
-        // Use RENDER_URL from env if available, or hardcoded render URL to avoid localhost when testing
-        const renderUrl = process.env.RENDER_URL || 'https://ecourt-backend.onrender.com';
+        const os = require('os');
+        function getLocalIp() {
+            const interfaces = os.networkInterfaces();
+            for (const name of Object.keys(interfaces)) {
+                for (const iface of interfaces[name]) {
+                    if (iface.family === 'IPv4' && !iface.internal) {
+                        return iface.address;
+                    }
+                }
+            }
+            return 'localhost';
+        }
+
+        let renderUrl = process.env.RENDER_URL;
+        if (!renderUrl) {
+            const host = req.get('host');
+            if (host.includes('localhost')) {
+                renderUrl = `http://${getLocalIp()}:${process.env.PORT || 5000}`;
+            } else {
+                renderUrl = `${req.protocol}://${host}`;
+            }
+        }
         const caseUrl = `${renderUrl}/case/${caseItem._id}`;
 
         const qrImage = await QRCode.toDataURL(caseUrl);
